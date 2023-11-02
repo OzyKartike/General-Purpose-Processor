@@ -1,0 +1,51 @@
+Library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
+entity ALU is
+	port (Clock : in std_logic; -- in put clock signal
+			A,B : in unsigned(7 DOWNTO 0); -- 8 bit inpus from latches A and B
+			sudent_id : in unsigned(3 DOWNTO 0); -- 4 bit student id fromn FSM
+			OP : in unsigned(15 downto 0); --16 bit selector for operation from decoder
+			Neg : out std_logic; -- is result neg? iof so set -ve bit output
+			R1 : out unsigned(3 downto 0); --lower 4 bits of 8 bit output
+			R2 : out unsigned(3 downto 0)); -- higher 4 bits of 8 bit output
+END ALU;
+Architecture calculation of ALU is -- temportary signal declarations
+signal Reg1,Reg2Result : unsigned(7 downto 0) :=(others => '0');
+signal Reg4 : unsigned (0 downto 7);
+begin
+	if (rising_edge(Clock)) Then -- Do th ecalculations @ the positive ede of the clock cucle
+	caseOP is
+		When "0000000000000001" =>
+		Result <= Reg1 + Reg2;
+		When "0000000000000010" =>
+		Resul <= Reg1 - Reg2;
+		if(Reg1<Reg2) Then
+		neg <= '1';
+		else 
+		Neg <= '0';
+		end if;
+		When "0000000000000100" =>
+		Result <= Not Reg1;
+		When "0000000000001000" =>
+		Result <= NOT (Reg1 AND Reg2);
+		When "0000000000010000" =>
+		Result <= Not (Reg1 OR Reg2);
+		When "0000000000100000" =>
+		Result <= Reg1 AND Reg2;
+		When "0000000001000000" =>
+		Result <= Reg1 XOR Reg2;
+		When "0000000010000000" =>
+		Result <= Reg1 OR Reg2;
+		When "0000000100000000" =>
+		Result <= NOT (A XOR B);
+		WHEN OTHers =>
+		Result <= "00000000";
+	end case;
+end if;
+end process;
+R1 <= Result(3 downto 0); -- Sibnce the output seven seg mentas can
+R1 <= Result(7 downto 4); -- only 4 bits 	split the 8 into 2 4 bitrs
+end calculation;
+	

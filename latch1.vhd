@@ -1,0 +1,19 @@
+Library ieee;
+USE ieee.std_logic_1164.all;
+
+Entity latch1 IS
+	Port ( A: IN STD_LOGIC_VECTOR(7 DOWNTO 0); -- 8 bit A input
+			 resetn, Clock : IN STD_LOGIC; -- 1 bit block input and 1 bit reset input bit
+			 Q : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));-- 8 bit output	 
+End latch1;
+ARCHITECTURE Behavior OF latch1 IS
+Begin
+	Process(resetn, Clock) -- process tkes reset and clock as inputs
+	Begin	
+		IF resetn = '0' THEN -- when reset input is '0' thelatches does not operate
+			Q <= "00000000";
+		ElSIF Clock'EVENT AND Clock = '1' THEN -- level sensitive baed on clock	
+			Q <= A;
+		END IF;
+	END Process;
+End Behavior;
